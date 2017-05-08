@@ -160,7 +160,7 @@ Probe.prototype._mainLoop = function () {
         // console.profileEnd("full detection");
         // console.timeEnd("full detection");
         var t2 = new Date().getTime();
-        var PING_FREQUENCY = 10000;
+        var PING_FREQUENCY = 5000;
         if (t2 - self._timeBufferFlushCall > PING_FREQUENCY) {
             self._timeBufferFlushCall = t2;
             self._sendBuffer();
@@ -281,6 +281,9 @@ Probe.prototype._addSelector = function (url, text, existsInStyleSheet) {
         }
         selector = selector.trim();
         if (selector.length) {
+            if (selector === '@font-face') {
+                return;
+            }
             if (!self._allSelectors[selector]) {
                 self._allSelectors[selector] = {
                     files: [],

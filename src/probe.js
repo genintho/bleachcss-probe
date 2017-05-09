@@ -98,7 +98,6 @@ Probe.prototype.start = function (userOptions) {
     if (!this.options.key) {
         throw Error("BleachCSS require an API key");
     }
-    this._syncSelectors();
     this.resume();
 };
 

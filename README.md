@@ -10,8 +10,8 @@ The Probe tracks the list of css selectors used in the application and sends it 
 
 The Probe's activity can be divided into 5 logical groups:
 
-- **Detect the list of CSS files used on the page**. If any new file gets used during the session, it needs to be detected and processed.
-- **Extract the list of selectors from the stylesheets**.
+- **Find CSS files used on the page**. If a new file gets used during the session, it needs to be detected and processed.
+- **Extract selectors from the stylesheets**.
 - **Detect page modifications**. This must be done without conflicting with other application code.
 - **Efficiently detect used selector**. With as little overhead as possible, to not slowdown the application.
 - **Report to the server**. The combination of many client reports over time can give an accurate and trustworthy analysis.

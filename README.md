@@ -1,27 +1,27 @@
 # BleachCSS - Probe - Reliable unused CSS Detection and Removal
 
-BleachCSS Probe (aka the Probe) is the official browser JavaScript client for [BleachCSS](https://www.bleachcss.com).
+The BleachCSS Probe is the official browser JavaScript client for [BleachCSS](https://www.bleachcss.com).
 
 ## What does it do?
 
-The Probe send back to the BleachCSS backend the list of selector actually in use in the application. When users are interacting with the page, the Probe will detect if new selectors are being used. As a result, BleachCSS can detect and remove unused CSS in any kind of application: static website, CMS, Single Page Application (SPA), etc using any kind of framework.
+The Probe tracks the list of css selectors used in the application and sends it to the BleachCSS servers. Even after a page loads, the Probe watches for DOM mutations to detect newly used selectors. As a result, BleachCSS can confidently detect and remove unused CSS in static websites, CMS systems, Single Page Applications (SPA), and traditional server-rendered dynamic content, no matter what framework is used.
 
 ## How does it work?
 
-The Probe activity can be divided into 5 logical group:
+The Probe's activity can be divided into 5 logical groups:
 
 - **Detect the list of CSS files used on the page**. If any new file gets used during the session, it needs to be detected and processed.
 - **Extract the list of selectors from the stylesheets**.
-- **Detect user activity**. This should be done without conflicting with the code of the application
-- **Efficiently detect used selector**. The Probe must do its job with as little overhead as possible, to not slowdown the application
-- **Send a report**. Only the combination of the report send by all the different instance of the Probe run by all the visitors of an application can give an accurate and trustworthy analysis
+- **Detect page modifications**. This must be done without conflicting with other application code.
+- **Efficiently detect used selector**. With as little overhead as possible, to not slowdown the application.
+- **Report to the server**. The combination of many client reports over time can give an accurate and trustworthy analysis.
 
-## How to install the Probe?
+## How do I install the Probe?
 
 ```HTML
 <script src="https://cdn.bleachcss.com/probe/latest.js"></script>
 <script>
-    BleachCSS.start({key: ' '});
+    BleachCSS.start({key: 'YOUR_KEY'});
 </script>
 ```
 
@@ -37,9 +37,22 @@ Configure and start a new instance of BleachCSS.
     BleachCSS.start(options);
 ```
 
+#### Options
+
+##### key
+**REQUIRED**
+Identifier for your application.
+
+##### url
+URL of the endpoint to call when sending the data collected by the probe.
+Defaults to BleachCSS server.
+
+##### throttle
+How many milli-seconds the Probe is going to wait before running its detection logic. Usefull if you notice that Probe runs too often and slow down your application.
+
 ### resume / stop
 
-Stop and resume listening to user actions. This can be useful if you notice that the Probe is slowing down you application significantly when doing some specific operation, like JavaScript powered animations.
+Stop or resume listening to user actions. This can be useful if the Probe is slowing down your application significantly when doing some specific operation, like JavaScript powered animations. If this occurs in your applicaion, please also open an issue on this repository or email bugs@bleachcss.com
 
 ```javascript
 BleachCSS.stop();
@@ -47,18 +60,3 @@ BleachCSS.stop();
 BleachCSS.resume();
 ```
 
-
-## Options
-
-Here is a list of options you can use when calling the `start` method.
-
-### key
-**REQUIRED**
-Identifier for your application.
-
-### url
-URL of the endpoint to call when sending the data collected by the probe.
-Defaults to BleachCSS server.
-
-### throttle
-How many milli-seconds the Probe is going to wait before running its detection logic. Usefull if you notice that Probe runs too often and slow down your application.

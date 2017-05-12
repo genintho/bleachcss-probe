@@ -1,4 +1,7 @@
 var Probe = require("../probe");
+var fs = require("fs");
+var path = require("path");
+const postcss = require("postcss");
 
 const inputs = {
     simple: {
@@ -58,7 +61,6 @@ const inputs = {
         `,
         selectors: [".aaa"]
     }
-
 };
 
 // @keyframes nprogress-spinner{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}.App__heading{margin-bottom:20px;font-size:30px;text-align:center;font-weight:400;color:#163f5e}
@@ -80,5 +82,53 @@ describe("Probe Selector Extraction", () => {
         }
     });
 
-    describe("", () => { });
+    describe("compare to postCSS", () => {
+        var dataFolder = path.resolve(__dirname, "real_site_example");
+        var files = fs.readdirSync(dataFolder);
+        files.forEach(file => {
+            test(file, () => {
+                var srcpath = path.resolve(__dirname, "real_site_example", file);
+                var cssSrc = fs.readFileSync(srcpath, { encoding: "utf-8" });
+                // fs.readFileSync(path.resolve(__dirname, "src/probe.js"), { encoding: "utf-8" });
+                var p = new Probe();
+                p._extractSelectors("u", cssSrc);
+                const probeSelectors = new Set(Object.keys(p._unseenSelectors));
+                return postcss().process(cssSrc, {}).then(function postCSSProcessResult(postCSSResult) {
+                    const postCssSelectors = new Set();
+                    postCSSResult.root.walkRules(function(rule) {
+                        const splits = rule.selector.split(",");
+                        splits.forEach(item => {
+                            var splits = item.split(":");
+                            var selector = item;
+                            if (splits[splits.length - 1] !== "first-child") {
+                                selector = splits[0];
+                            }
+                            selector = selector.trim();
+                            postCssSelectors.add(selector);
+                        });
+                    });
+
+                    postCssSelectors.forEach(selector => {
+                        if (!probeSelectors.has(selector)) {
+                            console.log("PostCSS selector not seen in probe results", selector);
+                        }
+                    });
+                    probeSelectors.forEach(selector => {
+                        if (!postCssSelectors.has(selector)) {
+                            console.log("Probe selector not seen in postCSS results", selector);
+                        }
+                    });
+                    expect(probeSelectors.size).toBe(postCssSelectors.size);
+                });
+            });
+        });
+
+        // expect(Object.keys(p._allSelectors)).toHaveLength(4836);
+
+        // const rules = new Set();
+
+        // console.log(rules);
+        // expect(rules.size).toBe(3955);
+        // console.log(Object.keys(p._allSelectors));
+    });
 });

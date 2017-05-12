@@ -89,7 +89,7 @@ function Probe() {
  * Initialize the probe and start recording usage
  * @param {Object} userOptions User defined value for the options of the Probe
  */
-Probe.prototype.start = function (userOptions) {
+Probe.prototype.start = function(userOptions) {
     // Copy over options
     for (var name in userOptions) {
         this.options[name] = userOptions[name];
@@ -104,7 +104,7 @@ Probe.prototype.start = function (userOptions) {
 /**
  * Stop observing DOM manipulation, but keep the state intact.
  */
-Probe.prototype.stop = function () {
+Probe.prototype.stop = function() {
     if (this._DOMObserver) {
         this._DOMObserver.disconnect();
         this._DOMObserver = null;
@@ -114,12 +114,12 @@ Probe.prototype.stop = function () {
 /**
  * Re-Start listening to DOM manipulation.
  */
-Probe.prototype.resume = function () {
+Probe.prototype.resume = function() {
     var self = this;
     if (self._DOMObserver) {
         return;
     }
-    self._DOMObserver = new MutationObserver(function (mutations) {
+    self._DOMObserver = new MutationObserver(function(mutations) {
         self._log("Mutation", mutations);
         self._mainLoop();
     });
@@ -130,7 +130,7 @@ Probe.prototype.resume = function () {
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 // PRIVATE
 // = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-Probe.prototype._log = function () {
+Probe.prototype._log = function() {
     if (this.options.debug) {
         console.log.apply(console, arguments);
     }
@@ -139,7 +139,7 @@ Probe.prototype._log = function () {
 /**
  * Master function controlling the detection of CSS
  */
-Probe.prototype._mainLoop = function () {
+Probe.prototype._mainLoop = function() {
     var self = this;
     var t1 = new Date().getTime();
     if (t1 - this._timeMainLoopCall < this.options.throttle) {
@@ -155,7 +155,7 @@ Probe.prototype._mainLoop = function () {
     for (var selector in self._allSelectors) {
         self._allSelectors[selector].checked = false;
     }
-    this._checkSelectorsByChunk(Object.keys(this._unseenSelectors), function () {
+    this._checkSelectorsByChunk(Object.keys(this._unseenSelectors), function() {
         // console.profileEnd("full detection");
         // console.timeEnd("full detection");
         var t2 = new Date().getTime();
@@ -170,10 +170,10 @@ Probe.prototype._mainLoop = function () {
 /**
  * Check 
  */
-Probe.prototype._syncSelectors = function () {
+Probe.prototype._syncSelectors = function() {
     var self = this;
     var urls = this._processStyleSheets();
-    this._downloadCSSFiles(urls, function (url, text) {
+    this._downloadCSSFiles(urls, function(url, text) {
         self._extractSelectors(url, text);
         self._mainLoop();
     });
@@ -182,7 +182,7 @@ Probe.prototype._syncSelectors = function () {
 /**
  * 
  */
-Probe.prototype._processStyleSheets = function () {
+Probe.prototype._processStyleSheets = function() {
     /** @type {any} */
     var styleSheets = document.styleSheets;
     var urlsToLoad = [];
@@ -210,7 +210,7 @@ Probe.prototype._processStyleSheets = function () {
 /**
  *  
  */
-Probe.prototype._processCssRules = function (fileURL, rules) {
+Probe.prototype._processCssRules = function(fileURL, rules) {
     for (var i = 0; i < rules.length; i++) {
         var selectorText = rules[i].selectorText;
         if (!selectorText) {
@@ -224,7 +224,7 @@ Probe.prototype._processCssRules = function (fileURL, rules) {
  * 
  * @param {string} source 
  */
-Probe.prototype._extractSelectors = function (fileURL, source) {
+Probe.prototype._extractSelectors = function(fileURL, source) {
     if (source === undefined) {
         return;
     }
@@ -271,16 +271,16 @@ Probe.prototype._extractSelectors = function (fileURL, source) {
  * Create a record of a selector
  * @param {string} text 
  */
-Probe.prototype._addSelector = function (url, text, existsInStyleSheet) {
+Probe.prototype._addSelector = function(url, text, existsInStyleSheet) {
     var self = this;
-    text.split(",").forEach(function (selector) {
+    text.split(",").forEach(function(selector) {
         var splits = selector.split(":");
         if (splits[splits.length - 1] !== "first-child") {
             selector = splits[0];
         }
         selector = selector.trim();
         if (selector.length) {
-            if (selector === '@font-face') {
+            if (selector === "@font-face") {
                 return;
             }
             if (!self._allSelectors[selector]) {
@@ -292,11 +292,11 @@ Probe.prototype._addSelector = function (url, text, existsInStyleSheet) {
                     fcn: self._findChecker(selector),
                     parent: self._findParentSelector(selector)
                 };
-                self._unseenSelectors[selector] = true;
             }
 
             if (existsInStyleSheet) {
                 self._allSelectors[selector].exists = true;
+                self._unseenSelectors[selector] = true;
             }
 
             if (url && self._allSelectors[selector].files.indexOf(url) === -1) {
@@ -309,7 +309,7 @@ Probe.prototype._addSelector = function (url, text, existsInStyleSheet) {
 /**
  * 
  */
-Probe.prototype._findParentSelector = function (selector) {
+Probe.prototype._findParentSelector = function(selector) {
     // This find parent pattern with space seperated selector
     // @TODO extra suport
     // child >
@@ -330,7 +330,7 @@ Probe.prototype._findParentSelector = function (selector) {
 /**
  * Find used selectors from the list of unused selector we already have
  */
-Probe.prototype._checkSelectorsByChunk = function (selectors, doneCb) {
+Probe.prototype._checkSelectorsByChunk = function(selectors, doneCb) {
     // console.time('detect');
     var ll = selectors.length;
     var limit = ll > this.options.chunkSize ? this.options.chunkSize : ll;
@@ -347,7 +347,7 @@ Probe.prototype._checkSelectorsByChunk = function (selectors, doneCb) {
 
     // Schedule an other batch of selector to process
     var self = this;
-    setTimeout(function () {
+    setTimeout(function() {
         self._checkSelectorsByChunk(selectors, doneCb);
     }, 0);
 };
@@ -355,13 +355,13 @@ Probe.prototype._checkSelectorsByChunk = function (selectors, doneCb) {
 /**
  * 
  */
-Probe.prototype._selectorCheck = function (selectorText) {
+Probe.prototype._selectorCheck = function(selectorText) {
     var a = this.__selectorCheck(selectorText);
     this._allSelectors[selectorText].checked = true;
     return a;
 };
 
-Probe.prototype.__selectorCheck = function (selectorText) {
+Probe.prototype.__selectorCheck = function(selectorText) {
     var item = this._allSelectors[selectorText];
     if (item.checked) {
         return item.seen;
@@ -392,7 +392,7 @@ Probe.prototype.__selectorCheck = function (selectorText) {
 /**
  * Identify which function need to be used to check the existence of the element
  */
-Probe.prototype._findChecker = function (selector) {
+Probe.prototype._findChecker = function(selector) {
     if (/^#[^\s]+$/.test(selector)) {
         return this._fcnCheckByID;
     }
@@ -409,7 +409,7 @@ Probe.prototype._findChecker = function (selector) {
  * @param {string} selector
  * @return {boolean}
  */
-Probe.prototype._fcnCheckByID = function (selector) {
+Probe.prototype._fcnCheckByID = function(selector) {
     if (document.getElementById(selector.substr(1))) {
         return true;
     }
@@ -421,7 +421,7 @@ Probe.prototype._fcnCheckByID = function (selector) {
  * @param {string} selector
  * @return {boolean}
  */
-Probe.prototype._fcnCheckClass = function (selector) {
+Probe.prototype._fcnCheckClass = function(selector) {
     if (document.getElementsByClassName(selector.substr(1)).length) {
         return true;
     }
@@ -433,7 +433,7 @@ Probe.prototype._fcnCheckClass = function (selector) {
  * @param {string} selector
  * @return {boolean}
  */
-Probe.prototype._fcnCheckFallback = function (selector) {
+Probe.prototype._fcnCheckFallback = function(selector) {
     if (document.querySelector(selector)) {
         return true;
     }
@@ -445,9 +445,9 @@ Probe.prototype._fcnCheckFallback = function (selector) {
  * @param {Array<string>} stylesheetURLs 
  * @param {function} callback What to do with the file content
  */
-Probe.prototype._downloadCSSFiles = function (stylesheetURLs, callback) {
+Probe.prototype._downloadCSSFiles = function(stylesheetURLs, callback) {
     var self = this;
-    stylesheetURLs.forEach(function (url) {
+    stylesheetURLs.forEach(function(url) {
         console.log("try to load", url);
         // Already fetched
         if (self._cssFilesURLs.indexOf(url) !== -1) {
@@ -457,7 +457,7 @@ Probe.prototype._downloadCSSFiles = function (stylesheetURLs, callback) {
         self._cssFilesURLs.push(url);
         console.log("do load", url);
         var ajax = new XMLHttpRequest();
-        ajax.onreadystatechange = function () {
+        ajax.onreadystatechange = function() {
             if (ajax.readyState === 4 && ajax.status === 200) {
                 callback(url, ajax.responseText);
             }
@@ -478,7 +478,7 @@ Probe.prototype._downloadCSSFiles = function (stylesheetURLs, callback) {
 /**
  * Send the results to the backend
  */
-Probe.prototype._sendBuffer = function () {
+Probe.prototype._sendBuffer = function() {
     var self = this;
     var cloneBuffer = [].concat(this._buffer);
     // Reset the buffer so we do not send the same thing again and again
@@ -492,9 +492,9 @@ Probe.prototype._sendBuffer = function () {
         k: this.options.key,
         f: {}
     };
-    cloneBuffer.forEach(function (selector) {
+    cloneBuffer.forEach(function(selector) {
         var files = self._allSelectors[selector].files;
-        files.forEach(function (file) {
+        files.forEach(function(file) {
             if (!data.f[file]) {
                 data.f[file] = [];
             }

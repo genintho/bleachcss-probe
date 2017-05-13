@@ -16,7 +16,9 @@ module.exports = function(cssSrc) {
                         selector = splits[0];
                     }
                     selector = selector.trim();
-                    selectors.add(selector);
+                    if (selector.length) {
+                        selectors.add(selector);
+                    }
                 });
             });
 

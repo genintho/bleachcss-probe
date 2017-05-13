@@ -16,7 +16,8 @@
   },
   "scripts": {
     "test": "node node_modules/.bin/jest",
-    "test:watch": "node node_modules/.bin/jest --watch"
+    "test:watch": "node node_modules/.bin/jest --watch",
+    "test:coverage": "node node_modules/.bin/jest --coverage"
   },
   "jest": {
     "rootDir": "src/"

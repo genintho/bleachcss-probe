@@ -20,6 +20,33 @@ describe("_addSelector", () => {
         });
     });
 
+    test("should handle parent selector correctly", () => {
+        var p = new Probe();
+        // p._addSelector = jest.fn();
+        const spy = jest.spyOn(p, "_addSelector");
+        p._extractSelectors("u", ".aaa .bbb {color:red;}");
+
+        expect(p._unseenSelectors).toEqual({ ".aaa .bbb": true });
+        expect(p._allSelectors).toMatchObject({
+            ".aaa .bbb": {
+                exists: true,
+                checked: false,
+                seen: false,
+                parent: ".aaa",
+                files: ["u"]
+            },
+            ".aaa": {
+                exists: false,
+                checked: false,
+                seen: false,
+                files: [],
+                parent: null
+            }
+        });
+        expect(spy).toBeCalledWith("u", ".aaa .bbb", true);
+        expect(spy).toBeCalledWith(null, ".aaa", false);
+    });
+
     test("set the exits value", () => {
         var p = new Probe();
 

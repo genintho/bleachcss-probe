@@ -233,7 +233,7 @@ Probe.prototype._extractSelectors = function(fileURL, source) {
     source = source.replace(new RegExp("(\\/\\*[\\s\\S]*?\\*\\/)", "gi"), "");
 
     // Remove Keyframe stuff
-    var reg = new RegExp("((@.*?keyframes [\\s\\S]*?){([\\s\\S]*?}\\s*?)})", "gi");
+    var reg = new RegExp("((@(-.*?-)?keyframes [\\s\\S]*?){([\\s\\S]*?}\\s*?)})", "gi");
     source = source.replace(reg, "");
 
     // Handle regular selectors and media query selectors
@@ -273,9 +273,10 @@ Probe.prototype._extractSelectors = function(fileURL, source) {
  */
 Probe.prototype._addSelector = function(url, text, existsInStyleSheet) {
     var self = this;
-    text.split(",").forEach(function(selector) {
-        var splits = selector.split(":");
-        if (splits[splits.length - 1] !== "first-child") {
+    text.split(",").forEach(function(item) {
+        var splits = item.split(":");
+        var selector = item;
+        if (splits[splits.length - 1].indexOf("-child") === -1) {
             selector = splits[0];
         }
         selector = selector.trim();

@@ -47,6 +47,30 @@ describe("_addSelector", () => {
         expect(spy).toBeCalledWith(null, ".aaa", false);
     });
 
+    // ===================================================================================================
+    // strictInferior: {
+    // input: "li > ul, li > ol { margin-bottom: 0; }",
+    // selectors: ["li"]
+    // }
+
+    test("should handle  strict parent selector correctly", () => {
+        var p = new Probe();
+        // p._addSelector = jest.fn();
+        const spy = jest.spyOn(p, "_addSelector");
+        p._extractSelectors("u", ".aaa > .bbb {color:red;}");
+
+        expect(p._allSelectors).toMatchObject({
+            ".aaa > .bbb": {
+                parent: ".aaa"
+            },
+            ".aaa": {
+                parent: null
+            }
+        });
+        expect(spy).toBeCalledWith("u", ".aaa > .bbb", true);
+        expect(spy).toBeCalledWith(null, ".aaa", false);
+    });
+
     test("set the exits value", () => {
         var p = new Probe();
 

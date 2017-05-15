@@ -71,7 +71,7 @@ const inputs = {
         input: "@media (max-width:700px){.aaa{max-width:calc(100vw - 50px)}}@-webkit-keyframes slide-in{0%{-webkit-transform:translateX(400px);}}.bbb{margin:8px 0;position:relative}",
         selectors: [".aaa", ".bbb"]
     },
-    // ==
+    // ===================================================================================================
     oKeyframes: {
         input: ".a1{color:red}@-o-keyframes f1{to{opacity:.9}}.a2{color:red2}@-webkit-keyframes f2{0%{opacity:0}to{opacity:1}}.a3{color:red3}@keyframes f3{0%{opacity:1}}.a4{color:red4}@-webkit-keyframes f4{0%{opacity:0}}.a5{color:red5}@keyframes f5{0%{opacity:1}}.a6{display:flex}",
         selectors: [".a1", ".a2", ".a3", ".a4", ".a5", ".a6"]

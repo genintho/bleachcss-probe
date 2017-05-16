@@ -194,6 +194,9 @@ Probe.prototype._processStyleSheets = function() {
         var href = stylesheet.href;
         var rules = stylesheet.cssRules;
 
+        if (href.substr(0, 4) !== "http") {
+            continue;
+        }
         // if we have not processed the file already
         if (href && this._cssFilesURLs.indexOf(href) === -1) {
             // we find rule, it means we can process them directly
@@ -315,14 +318,16 @@ Probe.prototype._addSelector = function(url, text, existsInStyleSheet) {
 Probe.prototype._findParentSelector = function(selector) {
     // This find parent pattern with space seperated selector
     // @TODO extra suport
-    // child >
     // attribute selector => blob[attribute=value]
     // multiple class selector => .red.square
     //      --> sort them?
     //      --> create a popularity sort?
     for (var i = selector.length; i; i--) {
         if (selector.charAt(i) == " ") {
-            var parent = selector.substr(0, i);
+            var parent = selector.substr(0, i).trim();
+            if (parent.slice(-1) === ">") {
+                parent = parent.slice(0, -1).trim();
+            }
             this._addSelector(null, parent, false);
             return parent;
         }

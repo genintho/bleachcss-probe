@@ -1,9 +1,9 @@
 {
-  "name": "bleachss-probe",
+  "name": "bleachcss-probe",
   "version": "1.0.2",
   "description": "In browser detection of unused CSS. Used selector are send back to an API endpoint.",
   "main": "src/probe.js",
-  "repository": "https://github.com/genintho/bleachss-probe.git",
+  "repository": "https://github.com/genintho/bleachcss-probe.git",
   "author": "Thomas Genin <thomas@bleachcss.com>",
   "license": "MIT",
   "devDependencies": {
@@ -15,6 +15,16 @@
     "prettier": "^1.3.1",
     "uglify-js": "2.8.23"
   },
+  "keywords": [
+    "optimize",
+    "optimise",
+    "unused",
+    "selector",
+    "clean up",
+    "wpo",
+    "CSS",
+    "HTML"
+  ],
   "scripts": {
     "test": "node node_modules/.bin/jest",
     "test:watch": "node node_modules/.bin/jest --watch",

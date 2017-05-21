@@ -7,12 +7,13 @@
   "author": "Thomas Genin <thomas@bleachcss.com>",
   "license": "MIT",
   "devDependencies": {
-    "jest": "^20.0.0",
+    "coveralls": "2.13.1",
+    "jest": "^20.0.3",
     "postcss": "5.2.17",
     "postcss-nested": "1.0.1",
     "postcss-safe-parser": "2.0.1",
-    "prettier": "1.2.2",
-    "uglify-js": "^2.8.23"
+    "prettier": "^1.3.1",
+    "uglify-js": "2.8.23"
   },
   "scripts": {
     "test": "node node_modules/.bin/jest",

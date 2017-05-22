@@ -382,14 +382,22 @@ Probe.prototype.__selectorCheck = function(selectorText) {
         }
     }
 
-    if (item.fcn(selectorText)) {
-        if (item.exists) {
-            delete this._unseenSelectors[selectorText];
-            this._buffer.push(selectorText);
+    try {
+        if (item.fcn(selectorText)) {
+            if (item.exists) {
+                delete this._unseenSelectors[selectorText];
+                this._buffer.push(selectorText);
+            }
+            item.seen = true;
+            return true;
         }
-        item.seen = true;
-        return true;
+    } catch (e) {
+        console.warn(e);
+        console.warn(
+            "BleachCSS Probe encounter an error. Please file a bug https://github.com/genintho/bleachcss-probe/issues/new"
+        );
     }
+
     return false;
 };
 

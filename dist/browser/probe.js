@@ -215,10 +215,9 @@ Probe.prototype._processStyleSheets = function() {
 Probe.prototype._processCssRules = function(fileURL, rules) {
     for (var i = 0; i < rules.length; i++) {
         var selectorText = rules[i].selectorText;
-        if (!selectorText) {
-            return;
+        if (selectorText) {
+            this._addSelector(fileURL, selectorText, true);
         }
-        this._addSelector(fileURL, selectorText, true);
     }
 };
 

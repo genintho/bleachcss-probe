@@ -1,6 +1,6 @@
 # BleachCSS - Probe - Reliable unused CSS Detection and Removal
 
-[![Coverage Status](https://coveralls.io/repos/github/genintho/bleachss-probe/badge.svg?branch=master)](https://coveralls.io/github/genintho/bleachss-probe?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/genintho/bleachcss-probe/badge.svg?branch=master)](https://coveralls.io/github/genintho/bleachcss-probe?branch=master)
 
 The BleachCSS Probe is the official browser JavaScript client for [BleachCSS](https://www.bleachcss.com).
 

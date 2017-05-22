@@ -192,11 +192,8 @@ Probe.prototype._processStyleSheets = function() {
         var href = stylesheet.href;
         var rules = stylesheet.cssRules;
 
-        if (href.substr(0, 4) !== "http") {
-            continue;
-        }
         // if we have not processed the file already
-        if (href && this._cssFilesURLs.indexOf(href) === -1) {
+        if (href && href.substr(0, 4) === "http" && this._cssFilesURLs.indexOf(href) === -1) {
             // we find rule, it means we can process them directly
             if (rules) {
                 this._cssFilesURLs.push(href);

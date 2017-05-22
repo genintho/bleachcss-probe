@@ -1,6 +1,6 @@
 {
   "name": "bleachcss-probe",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "In browser detection of unused CSS. Used selector are send back to an API endpoint.",
   "main": "src/probe.js",
   "repository": "https://github.com/genintho/bleachcss-probe.git",

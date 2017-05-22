@@ -31,10 +31,10 @@ const browserDistFile = path.resolve(__dirname, "dist/browser/probe-min.js");
 let result = UglifyJS.minify(source, {
     outFileName: browserDistFile,
     screw_ie8: true,
-    fromString: true,
-    mangleProperties: {
-        regex: /^_/
-    }
+    fromString: true
+    // mangleProperties: {
+    //     regex: /^_/
+    // }
 });
 
 fs.writeFileSync(browserDistFile, result.code);

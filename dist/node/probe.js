@@ -192,11 +192,8 @@ Probe.prototype._processStyleSheets = function() {
         var href = stylesheet.href;
         var rules = stylesheet.cssRules;
 
-        if (href.substr(0, 4) !== "http") {
-            continue;
-        }
         // if we have not processed the file already
-        if (href && this._cssFilesURLs.indexOf(href) === -1) {
+        if (href && href.substr(0, 4) === "http" && this._cssFilesURLs.indexOf(href) === -1) {
             // we find rule, it means we can process them directly
             if (rules) {
                 this._cssFilesURLs.push(href);
@@ -454,14 +451,14 @@ Probe.prototype._fcnCheckFallback = function(selector) {
 Probe.prototype._downloadCSSFiles = function(stylesheetURLs, callback) {
     var self = this;
     stylesheetURLs.forEach(function(url) {
-        console.log("try to load", url);
+        self._log("try to load", url);
         // Already fetched
         if (self._cssFilesURLs.indexOf(url) !== -1) {
             self._log("Stylesheets", url, " already downloaded");
             return;
         }
         self._cssFilesURLs.push(url);
-        console.log("do load", url);
+        self._log("do load", url);
         var ajax = new XMLHttpRequest();
         ajax.onreadystatechange = function() {
             if (ajax.readyState === 4 && ajax.status === 200) {

@@ -319,7 +319,7 @@ Probe.prototype._findParentSelector = function(selector) {
     for (var i = selector.length; i; i--) {
         if (selector.charAt(i) == " ") {
             var parent = selector.substr(0, i).trim();
-            if (parent.slice(-1) === ">") {
+            if ([">", "+", "~"].indexOf(parent.slice(-1)) !== -1) {
                 parent = parent.slice(0, -1).trim();
             }
             this._addSelector(null, parent, false);

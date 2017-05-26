@@ -318,17 +318,20 @@ Probe.prototype._findParentSelector = function(selector) {
     // multiple class selector => .red.square
     //      --> sort them?
     //      --> create a popularity sort?
-    for (var i = selector.length; i; i--) {
-        if (selector.charAt(i) == " ") {
-            var parent = selector.substr(0, i).trim();
-            if (parent.slice(-1) === ">") {
-                parent = parent.slice(0, -1).trim();
-            }
-            this._addSelector(null, parent, false);
-            return parent;
-        }
+
+    var splits = selector.split(/\s|\+|~|>/);
+    if (splits.length === 1) {
+        return null;
     }
-    return null;
+
+    var last = splits.pop();
+    var parentSelector = selector.substr(0, selector.length - last.length - 1).trim();
+    if (["+", "~", ">"].indexOf(parentSelector.slice(-1)) !== -1) {
+        parentSelector = parentSelector.slice(0, -1).trim();
+    }
+
+    this._addSelector(null, parentSelector, false);
+    return parentSelector;
 };
 
 /**

@@ -224,7 +224,7 @@ Probe.prototype._processCssRules = function(fileURL, rules) {
  * @param {string} source 
  */
 Probe.prototype._extractSelectors = function(fileURL, source) {
-    if (source === undefined) {
+    if (!source) {
         return;
     }
 
@@ -516,7 +516,7 @@ Probe.prototype._sendBuffer = function() {
     });
 
     var httpRequest = new XMLHttpRequest();
-    httpRequest.open("POST", self.options.url + "?t=" + new Date().getTime());
+    httpRequest.open("POST", self.options.url);
     httpRequest.send(JSON.stringify(data));
 };
 

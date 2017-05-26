@@ -89,7 +89,7 @@ describe("PostCSS Selector Extraction", () => {
     }
 });
 
-describe("Probe Selector Extraction", () => {
+describe("Probe._extractSelectors", () => {
     for (var name in inputs) {
         const t = inputs[name];
         test("probe parser " + name, () => {
@@ -128,5 +128,34 @@ describe("PostCSS vs Probe parsing", () => {
 
             expect(postcssSelectors.size).toBe(probeSelectors.size);
         });
+    });
+});
+
+describe("Probe._extractSelectors", () => {
+    test(" should do nothing with empty source", () => {
+        var p = new Probe();
+        p._addSelector = jest.fn();
+        var spyExtractor = jest.spyOn(p, "_extractSelectors");
+        p._extractSelectors("u", "");
+        expect(spyExtractor).toHaveBeenCalledTimes(1);
+        expect(p._addSelector).not.toHaveBeenCalled();
+    });
+
+    test("Probe._extractSelectors should do nothing with empty source", () => {
+        var p = new Probe();
+        p._addSelector = jest.fn();
+        var spyExtractor = jest.spyOn(p, "_extractSelectors");
+        p._extractSelectors("u", null);
+        expect(spyExtractor).toHaveBeenCalledTimes(1);
+        expect(p._addSelector).not.toHaveBeenCalled();
+    });
+
+    test("Probe._extractSelectors should do nothing with empty source", () => {
+        var p = new Probe();
+        p._addSelector = jest.fn();
+        var spyExtractor = jest.spyOn(p, "_extractSelectors");
+        p._extractSelectors("u", undefined);
+        expect(spyExtractor).toHaveBeenCalledTimes(1);
+        expect(p._addSelector).not.toHaveBeenCalled();
     });
 });

@@ -516,7 +516,7 @@ Probe.prototype._sendBuffer = function() {
     });
 
     var httpRequest = new XMLHttpRequest();
-    httpRequest.open("POST", self.options.url + "?t=" + new Date().getTime());
+    httpRequest.open("POST", self.options.url);
     httpRequest.send(JSON.stringify(data));
 };
 

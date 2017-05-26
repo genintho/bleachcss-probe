@@ -38,6 +38,13 @@ describe("Probe._sendbuffer", () => {
         global.XMLHttpRequest = jest.fn().mockImplementation(xhrMockClass);
     });
 
+    test("should do nothing if buffer is empty", () => {
+        p._buffer = [];
+        p._sendBuffer();
+        expect(open).not.toHaveBeenCalled();
+        expect(send).not.toHaveBeenCalled();
+    });
+
     test("use the options url", () => {
         var fakeUrl = "something" + new Date().getTime();
         p.start({ url: fakeUrl });

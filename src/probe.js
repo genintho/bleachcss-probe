@@ -224,7 +224,7 @@ Probe.prototype._processCssRules = function(fileURL, rules) {
  * @param {string} source 
  */
 Probe.prototype._extractSelectors = function(fileURL, source) {
-    if (source === undefined) {
+    if (!source) {
         return;
     }
 

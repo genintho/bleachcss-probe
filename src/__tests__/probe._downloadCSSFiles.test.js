@@ -33,4 +33,12 @@ describe("Probe._downloadCSSFiles", () => {
         p._downloadCSSFiles([testURL], callbackFct);
         expect(callbackFct).not.toHaveBeenCalled();
     });
+
+    test("does not load CSS data uri", () => {
+        var testURL = "data:text/css,something";
+        var callbackFct = jest.fn();
+        var p = new Probe();
+        p._downloadCSSFiles([testURL], callbackFct);
+        expect(callbackFct).not.toHaveBeenCalled();
+    });
 });

@@ -465,6 +465,13 @@ Probe.prototype._downloadCSSFiles = function(stylesheetURLs, callback) {
         if (self._cssFilesURLs.indexOf(url) !== -1) {
             return;
         }
+
+        // dont fetch data url
+        var dataURl = "data:text/css";
+        if (url.substr(0, dataURl.length) === dataURl) {
+            return;
+        }
+
         self._cssFilesURLs.push(url);
         var ajax = new XMLHttpRequest();
         ajax.onreadystatechange = function() {
@@ -472,12 +479,6 @@ Probe.prototype._downloadCSSFiles = function(stylesheetURLs, callback) {
                 callback(url, ajax.responseText);
             }
         };
-
-        // dont fetch that!
-        var dataURl = "data:text/css";
-        if (url.substr(0, dataURl.length) === dataURl) {
-            return;
-        }
 
         ajax.open("GET", url, true);
         ajax.send(null);

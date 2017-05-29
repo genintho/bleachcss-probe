@@ -461,14 +461,11 @@ Probe.prototype._fcnCheckFallback = function(selector) {
 Probe.prototype._downloadCSSFiles = function(stylesheetURLs, callback) {
     var self = this;
     stylesheetURLs.forEach(function(url) {
-        self._log("try to load", url);
         // Already fetched
         if (self._cssFilesURLs.indexOf(url) !== -1) {
-            self._log("Stylesheets", url, " already downloaded");
             return;
         }
         self._cssFilesURLs.push(url);
-        self._log("do load", url);
         var ajax = new XMLHttpRequest();
         ajax.onreadystatechange = function() {
             if (ajax.readyState === 4 && ajax.status === 200) {
@@ -482,7 +479,6 @@ Probe.prototype._downloadCSSFiles = function(stylesheetURLs, callback) {
             return;
         }
 
-        self._log("Download stylesheet at ", url);
         ajax.open("GET", url, true);
         ajax.send(null);
     });

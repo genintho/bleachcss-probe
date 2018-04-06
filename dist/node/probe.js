@@ -190,18 +190,28 @@ Probe.prototype._processStyleSheets = function() {
         /** @type {CSSStyleSheet} */
         var stylesheet = styleSheets[i];
         var href = stylesheet.href;
-        var rules = stylesheet.cssRules;
 
         // if we have not processed the file already
         if (href && href.substr(0, 4) === "http" && this._cssFilesURLs.indexOf(href) === -1) {
             // we find rule, it means we can process them directly
-            if (rules) {
-                this._cssFilesURLs.push(href);
-                this._processCssRules(href, rules);
-            } else {
-                // we need to return the url, so the file can be processed
+            var rules = null;
+
+            try {
+                // Accessing this prop can trigger an exception
+                rules = stylesheet.cssRules;
+                if (rules) {
+                    this._cssFilesURLs.push(href);
+                    this._processCssRules(href, rules);
+                }
+            } catch(e) {
+                // No op
+            }
+
+            // we need to return the url, so the file can be processed
+            if (!rules) {
                 urlsToLoad.push(href);
             }
+
         }
     }
     return urlsToLoad;
@@ -224,10 +234,9 @@ Probe.prototype._processCssRules = function(fileURL, rules) {
  * @param {string} source 
  */
 Probe.prototype._extractSelectors = function(fileURL, source) {
-    if (source === undefined) {
+    if (!source) {
         return;
     }
-
     // Remove comments
     source = source.replace(new RegExp("(\\/\\*[\\s\\S]*?\\*\\/)", "gi"), "");
 
@@ -238,7 +247,7 @@ Probe.prototype._extractSelectors = function(fileURL, source) {
     // Handle regular selectors and media query selectors
     // Media Query capture = '((@media [\\s\\S]*?){([\\s\\S]*?}\\s*?)})';
     reg = new RegExp(
-        "((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})",
+        "((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@[media|supports][\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})",
         "gi"
     );
 
@@ -258,7 +267,7 @@ Probe.prototype._extractSelectors = function(fileURL, source) {
         selector = selector.replace(/\n+/, "\n");
 
         //determine the type
-        if (selector.indexOf("@media") !== -1) {
+        if (selector.indexOf("@media") !== -1 || selector.indexOf("@supports") !== -1) {
             this._extractSelectors(fileURL, arr[3] + "\n}");
         } else {
             this._addSelector(fileURL, selector, true);
@@ -516,7 +525,7 @@ Probe.prototype._sendBuffer = function() {
     });
 
     var httpRequest = new XMLHttpRequest();
-    httpRequest.open("POST", self.options.url + "?t=" + new Date().getTime());
+    httpRequest.open("POST", self.options.url);
     httpRequest.send(JSON.stringify(data));
 };
 

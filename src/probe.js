@@ -190,18 +190,28 @@ Probe.prototype._processStyleSheets = function() {
         /** @type {CSSStyleSheet} */
         var stylesheet = styleSheets[i];
         var href = stylesheet.href;
-        var rules = stylesheet.cssRules;
 
         // if we have not processed the file already
         if (href && href.substr(0, 4) === "http" && this._cssFilesURLs.indexOf(href) === -1) {
             // we find rule, it means we can process them directly
-            if (rules) {
-                this._cssFilesURLs.push(href);
-                this._processCssRules(href, rules);
-            } else {
-                // we need to return the url, so the file can be processed
+            var rules = null;
+
+            try {
+                // Accessing this prop can trigger an exception
+                rules = stylesheet.cssRules;
+                if (rules) {
+                    this._cssFilesURLs.push(href);
+                    this._processCssRules(href, rules);
+                }
+            } catch(e) {
+                // No op
+            }
+
+            // we need to return the url, so the file can be processed
+            if (!rules) {
                 urlsToLoad.push(href);
             }
+
         }
     }
     return urlsToLoad;

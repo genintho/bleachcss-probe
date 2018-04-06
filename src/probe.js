@@ -227,7 +227,6 @@ Probe.prototype._extractSelectors = function(fileURL, source) {
     if (!source) {
         return;
     }
-
     // Remove comments
     source = source.replace(new RegExp("(\\/\\*[\\s\\S]*?\\*\\/)", "gi"), "");
 
@@ -238,7 +237,7 @@ Probe.prototype._extractSelectors = function(fileURL, source) {
     // Handle regular selectors and media query selectors
     // Media Query capture = '((@media [\\s\\S]*?){([\\s\\S]*?}\\s*?)})';
     reg = new RegExp(
-        "((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})",
+        "((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@[media|supports][\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})",
         "gi"
     );
 
@@ -258,7 +257,7 @@ Probe.prototype._extractSelectors = function(fileURL, source) {
         selector = selector.replace(/\n+/, "\n");
 
         //determine the type
-        if (selector.indexOf("@media") !== -1) {
+        if (selector.indexOf("@media") !== -1 || selector.indexOf("@supports") !== -1) {
             this._extractSelectors(fileURL, arr[3] + "\n}");
         } else {
             this._addSelector(fileURL, selector, true);

@@ -34,6 +34,11 @@ const inputs = {
         selectors: [".aaa .bbb"]
     },
     // ===================================================================================================
+    supports: {
+        input: `@media (min-width:1200px) and (max-width:1330px){.in{color:red}}@supports(-ms-ime-align:auto){.insideSupport{display:block}}.outside{color:#6e788b}`,
+        selectors: [ ".in", ".insideSupport", ".outside"]
+    },
+    // ===================================================================================================
     commentStart: {
         input: `
         /* .comment */
@@ -108,25 +113,36 @@ describe("PostCSS vs Probe parsing", () => {
         test("vs " + file, async () => {
             var srcpath = path.resolve(__dirname, "real_site_example", file);
             var cssSrc = fs.readFileSync(srcpath, { encoding: "utf-8" });
-            // fs.readFileSync(path.resolve(__dirname, "src/probe.js"), { encoding: "utf-8" });
-            var p = new Probe();
-            p._extractSelectors("u", cssSrc);
+            var probeInstance = new Probe();
+            probeInstance._extractSelectors("u", cssSrc);
 
-            const probeSelectors = new Set(Object.keys(p._unseenSelectors));
+            const probeSelectors = new Set();
+
+            Object.keys(probeInstance._unseenSelectors).forEach((sel)=>{
+                if (['}', '{'].includes(sel.substr(0,1))) {
+                    expect(sel).toBe(sel.substr(1));
+                }
+                probeSelectors.add(sel);
+            });
+
             const postcssSelectors = await postCssExtractor(cssSrc);
 
+            let foundError = false;
             postcssSelectors.forEach(selector => {
                 if (!probeSelectors.has(selector)) {
-                    console.log("PostCSS selector not seen in probe results", selector);
+                    foundError = true;
+                    console.error("PostCSS selector not seen in probe results", selector);
                 }
             });
             probeSelectors.forEach(selector => {
                 if (!postcssSelectors.has(selector)) {
-                    console.log("Probe selector not seen in postCSS results", selector);
+                    foundError = true;
+                    console.error("Probe selector not seen in postCSS results", selector);
                 }
             });
 
             expect(postcssSelectors.size).toBe(probeSelectors.size);
+            expect(foundError).toBeFalsy();
         });
     });
 });
